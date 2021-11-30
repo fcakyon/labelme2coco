@@ -8,7 +8,12 @@ from labelme2coco.image_utils import read_image_shape_as_dict
 
 
 class labelme2coco(object):
-    def __init__(self, labelme_folder='', save_json_path='./new.json'):
+    def __init__(self):
+        # Retains categories for different datasets. e.g. train and validation set
+        self.categories = []
+        self.label = []
+
+    def convert(self, labelme_folder='', save_json_path='./new.json'):
         """
         Args:
             labelme_folder: folder that contains labelme annotations and image files
@@ -16,9 +21,7 @@ class labelme2coco(object):
         """
         self.save_json_path = save_json_path
         self.images = []
-        self.categories = []
         self.annotations = []
-        self.label = []
         self.annID = 1
         self.height = 0
         self.width = 0
