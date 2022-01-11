@@ -31,7 +31,7 @@ def get_coco_from_labelme_folder(
     coco = Coco()
 
     if coco_category_list is not None:
-        coco.add_3fdc_from_coco_category_list(coco_category_list)
+        coco.add_categories_from_coco_category_list(coco_category_list)
 
     # parse labelme annotations
     category_ind = 0
