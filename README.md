@@ -1,11 +1,12 @@
-[![Downloads](https://pepy.tech/badge/labelme2coco)](https://pepy.tech/project/labelme2coco)
-[![PyPI version](https://badge.fury.io/py/labelme2coco.svg)](https://badge.fury.io/py/labelme2coco)
-![CI](https://github.com/fcakyon/labelme2coco/workflows/CI/badge.svg)
-
 <div align="center">
 <h1>
   labelme2coco
 </h1>
+
+<a href="https://pepy.tech/project/labelme2coco"><img src="https://pepy.tech/badge/labelme2coco" alt="downloads"></a>
+<a href="https://badge.fury.io/py/labelme2coco"><img src="https://badge.fury.io/py/labelme2coco.svg" alt="pypi version"></a>
+<a href="https://github.com/fcakyon/labelme2coco/actions/workflows/ci.yml"><img src="https://github.com/fcakyon/labelme2coco/workflows/CI/badge.svg" alt="ci"></a>
+<a href="https://twitter.com/fcakyon"><img src="https://img.shields.io/twitter/follow/fcakyon?color=blue&logo=twitter&style=flat" alt="fcakyon twitter">
 
 <h4>
   A lightweight package for converting your <a href="https://github.com/wkentaro/labelme">labelme</a> annotations into COCO object detection format.
