@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from PIL import Image
 from sahi.utils.coco import Coco, CocoAnnotation, CocoCategory, CocoImage
 from sahi.utils.file import list_files_recursively, load_json, save_json
 from tqdm import tqdm
@@ -41,7 +40,10 @@ def get_coco_from_labelme_folder(
         data = load_json(json_path)
         # get image size
         image_path = str(Path(labelme_folder) / data["imagePath"])
-        width, height = Image.open(image_path).size
+        # use the image sizes provided by labelme (they already account for
+        # things such as EXIF orientation)
+        width = data["imageWidth"]
+        height = data["imageHeight"]
         # init coco image
         coco_image = CocoImage(file_name=data["imagePath"], height=height, width=width)
         # iterate over annotations
