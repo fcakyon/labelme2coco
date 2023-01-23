@@ -64,6 +64,16 @@ def get_coco_from_labelme_folder(
                 coco.add_category(CocoCategory(id=category_id, name=category_name))
                 category_ind += 1
             # parse bbox/segmentation
+            if shape["shape_type"] == "circle":
+                (cx,cy), (x1,y1) = shape["points"]
+                r = np.linalg.norm(np.array([x1-cx,y1-cy]))
+                angles = np.linspace(0,2*np.pi,50*(int(r)+1))
+                x = cx + r * np.cos(angles)
+                y = cy + r * np.sin(angles)
+                points = np.rint(np.append(x,y).reshape(-1,2,order='F'))
+                _, index = np.unique(points, return_index=True, axis=0)
+                shape["points"] = points[np.sort(index)]
+                shape["shape_type"] = "polygon"
             if shape["shape_type"] == "rectangle":
                 x1 = shape["points"][0][0]
                 y1 = shape["points"][0][1]
