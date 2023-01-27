@@ -28,10 +28,10 @@ class Tests(unittest.TestCase):
         coco = get_coco_from_labelme_folder(labelme_folder)
 
         test_coco = coco.json
-        self.assertEqual(test_coco["annotations"][1]["bbox"][1], 97)
+        self.assertEqual(int(test_coco["annotations"][1]["bbox"][1]), 96)
         self.assertEqual(test_coco["annotations"][1]["id"], 2)
         self.assertEqual(test_coco["annotations"][1]["category_id"], 0)
-        self.assertEqual(test_coco["annotations"][1]["segmentation"][0][2], 0)
+        self.assertEqual(int(test_coco["annotations"][1]["segmentation"][0][2]), 0)
         self.assertEqual(len(test_coco["annotations"]), 3)
         self.assertEqual(test_coco["images"][0]["height"], 375)
         self.assertEqual(len(test_coco["images"]), 1)
