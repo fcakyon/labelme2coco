@@ -25,6 +25,7 @@ def get_coco_from_labelme_folder(
     # get json list
     _, abs_json_path_list = list_files_recursively(labelme_folder, contains=[".json"])
     labelme_json_list = abs_json_path_list
+    labelme_json_list.sort()
 
     # init coco object
     coco = Coco()
