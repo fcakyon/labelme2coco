@@ -40,13 +40,13 @@ def get_coco_from_labelme_folder(
     ):
         data = load_json(json_path)
         # get image size
-        image_path = str(Path(labelme_folder) / data["imagePath"])
+        image_path = str(Path(json_path).parent / data["imagePath"])
         # use the image sizes provided by labelme (they already account for
         # things such as EXIF orientation)
         width = data["imageWidth"]
         height = data["imageHeight"]
         # init coco image
-        coco_image = CocoImage(file_name=data["imagePath"], height=height, width=width)
+        coco_image = CocoImage(file_name=image_path, height=height, width=width)
         # iterate over annotations
         for shape in data["shapes"]:
             # set category name and id
