@@ -10,6 +10,8 @@ from sahi.utils.file import save_json
 
 from labelme2coco.labelme2coco import get_coco_from_labelme_folder
 
+from typing import List
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -22,6 +24,7 @@ def convert(
     labelme_folder: str,
     export_dir: str = "runs/labelme2coco/",
     train_split_rate: float = 1,
+    skip_labels: List[str] = [],
 ):
     """
     Args:
@@ -29,7 +32,7 @@ def convert(
         export_dir: path for coco jsons to be exported
         train_split_rate: ration fo train split
     """
-    coco = get_coco_from_labelme_folder(labelme_folder)
+    coco = get_coco_from_labelme_folder(labelme_folder, skip_labels=skip_labels)
     if train_split_rate < 1:
         result = coco.split_coco_as_train_val(train_split_rate)
         # export train split
