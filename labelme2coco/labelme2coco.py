@@ -15,7 +15,7 @@ class labelme2coco:
 
 
 def get_coco_from_labelme_folder(
-    labelme_folder: str, coco_category_list: List = None
+    labelme_folder: str, coco_category_list: List = None, skip_labels: List[str] = []
 ) -> Coco:
     """
     Args:
@@ -32,6 +32,9 @@ def get_coco_from_labelme_folder(
 
     if coco_category_list is not None:
         coco.add_categories_from_coco_category_list(coco_category_list)
+
+    if len(skip_labels) > 0:
+        print(f"Will skip the following annotated labels: {skip_labels}")
 
     # parse labelme annotations
     category_ind = 0
@@ -51,6 +54,8 @@ def get_coco_from_labelme_folder(
         for shape in data["shapes"]:
             # set category name and id
             category_name = shape["label"]
+            if category_name in skip_labels:
+                continue
             category_id = None
             for (
                 coco_category_id,
