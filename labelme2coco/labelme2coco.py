@@ -72,18 +72,18 @@ def get_coco_from_labelme_folder(
 
             # convert circles, lines, and points to bbox/segmentation
             if shape["shape_type"] == "circle":
-                (cx,cy), (x1,y1) = shape["points"]
-                r = np.linalg.norm(np.array([x1-cx,y1-cy]))
-                angles = np.linspace(0,2*np.pi,50*(int(r)+1))
+                (cx, cy), (x1, y1) = shape["points"]
+                r = np.linalg.norm(np.array([x1 - cx, y1 - cy]))
+                angles = np.linspace(0, 2 * np.pi, 50 * (int(r) + 1))
                 x = cx + r * np.cos(angles)
                 y = cy + r * np.sin(angles)
-                points = np.rint(np.append(x,y).reshape(-1,2,order='F'))
+                points = np.rint(np.append(x, y).reshape(-1, 2, order='F'))
                 _, index = np.unique(points, return_index=True, axis=0)
                 shape["points"] = points[np.sort(index)]
                 shape["shape_type"] = "polygon"
             elif shape["shape_type"] == "line":
-                (x1,y1), (x2,y2) = shape["points"]
-                shape["points"] = [x1,y1,x2,y2,x2+1e-3,y2+1e-3,x1+1e-3,y1+1e-3]
+                (x1, y1), (x2, y2) = shape["points"]
+                shape["points"] = [x1, y1, x2, y2, x2 + 1e-3, y2 + 1e-3, x1 + 1e-3, y1 + 1e-3]
                 shape["shape_type"] = "polygon"
             elif shape["shape_type"] == "point":
                 (x1, y1) = shape["points"][0]
