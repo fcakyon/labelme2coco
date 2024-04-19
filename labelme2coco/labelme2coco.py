@@ -15,13 +15,12 @@ class labelme2coco:
 
 
 def get_coco_from_labelme_folder(
-    labelme_folder: str, coco_category_list: List = None, category_id_start: int = 0
+    labelme_folder: str, coco_category_list: List = None, skip_labels: List[str] = [], category_id_start: int = 0
 ) -> Coco:
     """
     Args:
         labelme_folder: folder that contains labelme annotations and image files
         coco_category_list: start from a predefined coco cateory list
-        category_id_start: starting value for category IDs (default: 0)
     """
     # get json list
     _, abs_json_path_list = list_files_recursively(labelme_folder, contains=[".json"])
@@ -34,7 +33,11 @@ def get_coco_from_labelme_folder(
     if coco_category_list is not None:
         coco.add_categories_from_coco_category_list(coco_category_list)
 
+    if len(skip_labels) > 0:
+        print(f"Will skip the following annotated labels: {skip_labels}")
+
     # parse labelme annotations
+    # depending on cli arguments, will start counting at 1
     category_ind = category_id_start
     for json_path in tqdm(
         labelme_json_list, "Converting labelme annotations to COCO format"
@@ -53,6 +56,8 @@ def get_coco_from_labelme_folder(
         for shape in data["shapes"]:
             # set category name and id
             category_name = shape["label"]
+            if category_name in skip_labels:
+                continue
             category_id = None
             for (
                 coco_category_id,
@@ -66,17 +71,28 @@ def get_coco_from_labelme_folder(
                 category_id = category_ind
                 coco.add_category(CocoCategory(id=category_id, name=category_name))
                 category_ind += 1
-            # parse bbox/segmentation
+
+            # convert circles, lines, and points to bbox/segmentation
             if shape["shape_type"] == "circle":
-                (cx,cy), (x1,y1) = shape["points"]
-                r = np.linalg.norm(np.array([x1-cx,y1-cy]))
-                angles = np.linspace(0,2*np.pi,50*(int(r)+1))
+                (cx, cy), (x1, y1) = shape["points"]
+                r = np.linalg.norm(np.array([x1 - cx, y1 - cy]))
+                angles = np.linspace(0, 2 * np.pi, 50 * (int(r) + 1))
                 x = cx + r * np.cos(angles)
                 y = cy + r * np.sin(angles)
-                points = np.rint(np.append(x,y).reshape(-1,2,order='F'))
+                points = np.rint(np.append(x, y).reshape(-1, 2, order='F'))
                 _, index = np.unique(points, return_index=True, axis=0)
                 shape["points"] = points[np.sort(index)]
                 shape["shape_type"] = "polygon"
+            elif shape["shape_type"] == "line":
+                (x1, y1), (x2, y2) = shape["points"]
+                shape["points"] = [x1, y1, x2, y2, x2 + 1e-3, y2 + 1e-3, x1 + 1e-3, y1 + 1e-3]
+                shape["shape_type"] = "polygon"
+            elif shape["shape_type"] == "point":
+                (x1, y1) = shape["points"][0]
+                shape["points"] = [[x1, y1], [x1 + 1, y1 + 1]]
+                shape["shape_type"] = "rectangle"
+
+            # parse bbox/segmentation
             if shape["shape_type"] == "rectangle":
                 x1 = shape["points"][0][0]
                 y1 = shape["points"][0][1]
