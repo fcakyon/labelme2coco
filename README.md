@@ -39,6 +39,10 @@ labelme2coco path/to/labelme/dir
 labelme2coco path/to/labelme/dir --train_split_rate 0.85
 ```
 
+```python
+labelme2coco path/to/labelme/dir --category_id_start 1
+```
+
 ### Advanced Usage
 
 ```python
@@ -54,8 +58,11 @@ export_dir = "tests/data/"
 # set train split rate
 train_split_rate = 0.85
 
+# set category ID start value
+category_id_start = 1
+
 # convert labelme annotations to coco
-labelme2coco.convert(labelme_folder, export_dir, train_split_rate)
+labelme2coco.convert(labelme_folder, export_dir, train_split_rate, category_id_start=category_id_start)
 ```
 
 ```python
@@ -71,14 +78,17 @@ labelme_val_folder = "tests/data/labelme_annot"
 # set path for coco json to be saved
 export_dir = "tests/data/"
 
+# set category ID start value
+category_id_start = 1
+
 # create train coco object
-train_coco = get_coco_from_labelme_folder(labelme_train_folder)
+train_coco = get_coco_from_labelme_folder(labelme_train_folder, category_id_start=category_id_start)
 
 # export train coco json
 save_json(train_coco.json, export_dir+"train.json")
 
 # create val coco object
-val_coco = get_coco_from_labelme_folder(labelme_val_folder, coco_category_list=train_coco.json_categories)
+val_coco = get_coco_from_labelme_folder(labelme_val_folder, coco_category_list=train_coco.json_categories, category_id_start=category_id_start)
 
 # export val coco json
 save_json(val_coco.json, export_dir+"val.json")

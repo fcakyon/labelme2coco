@@ -25,14 +25,16 @@ def convert(
     export_dir: str = "runs/labelme2coco/",
     train_split_rate: float = 1,
     skip_labels: List[str] = [],
+    category_id_start: int = 0,
 ):
     """
     Args:
         labelme_folder: folder that contains labelme annotations and image files
         export_dir: path for coco jsons to be exported
         train_split_rate: ration fo train split
+        category_id_start: starting value for category IDs (default: 0)
     """
-    coco = get_coco_from_labelme_folder(labelme_folder, skip_labels=skip_labels)
+    coco = get_coco_from_labelme_folder(labelme_folder, skip_labels=skip_labels, category_id_start=category_id_start)
     if train_split_rate < 1:
         result = coco.split_coco_as_train_val(train_split_rate)
         # export train split
